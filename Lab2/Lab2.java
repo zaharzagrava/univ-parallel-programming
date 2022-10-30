@@ -3,43 +3,74 @@ import java.util.concurrent.Executor;
 
 public class Lab2 {
 
+  private static int[] createLongMyArr() {
+    int size = 10000;
+
+    int[] mas = new int[size];
+
+    for (int i = 0; i < size; i++)
+        mas[i] = i;
+
+    return mas;
+  }
+
+  private static int[] createMyArr() {
+    return new int[]{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17};
+  }
+
   public static void main(final String[] arguments) throws InterruptedException {
-    int[] intArr = new int[]{1,2,3,4,5};
+    int[] intArr = Lab2.createLongMyArr().clone();
 
-    System.out.println(Arrays.toString(intArr));
+    int size = intArr.length;
 
-    while(intArr.length > 1) {
-      Task[] sumTasks = new Task[intArr.length / 2];
-      Thread[] sumThreads = new Thread[intArr.length / 2];
-      for (int i = 0; i < intArr.length; i++) {
-        // stop if we are at the middle
-        if(i + 1 > (intArr.length / 2)) break;
+    int threadsCount = 50;
+    Task[] sumTasks = new Task[threadsCount];
+    Thread[] sumThreads = new Thread[threadsCount];
+    while(size > 1) {
+      int summationIndex = 0;
+      while(summationIndex < size / 2) {
+        System.out.println("--- Thread run ---");
 
-        int begElemIndex = i;
-        int endElemIndex = intArr.length - i - 1;
+        int threadsIndex = 0;
+        while(threadsIndex < threadsCount && summationIndex < size / 2) {
+          int begElemIndex = summationIndex;
+          int endElemIndex = size - summationIndex - 1;
+  
+          int begElem = intArr[begElemIndex];
+          int endElem = intArr[endElemIndex];
+  
+          Task task = new Task(begElem, endElem);
+          Thread th = new Thread(task);
+          sumTasks[threadsIndex] = task;
+          sumThreads[threadsIndex] = th;
+  
+          th.start();
 
-        int begElem = intArr[begElemIndex];
-        int endElem = intArr[endElemIndex];
-
-        Task task = new Task(begElem, endElem);
-        Thread th = new Thread(task);
-        sumTasks[i] = task;
-        sumThreads[i] = th;
-
-        th.start();
-      }
-      
-      for (int i = 0; i < sumTasks.length; i++) {
-        sumThreads[i].join();
-        intArr[i] = sumTasks[i].getValue();
+          threadsIndex++; summationIndex++;
+        }
+        
+        // Start counting from first index where we started creating threads
+        for (int i = 0; i < threadsIndex; i++) {
+          sumThreads[i].join();
+          intArr[summationIndex - threadsIndex + i] = sumTasks[i].getValue();
+        }
       }
   
-      intArr = Arrays.copyOfRange(intArr, 0, intArr.length - 1);
+      size = size / 2 + size % 2;
 
-      System.out.println(Arrays.toString(intArr));
+      System.out.println(size);
     }
     
     System.out.println("The sum of the array is: " + intArr[0]);
+
+    // Calculate real sum for comparison
+    long realSum = 0;
+    int[] intArrBench = Lab2.createLongMyArr().clone();
+    for (int i = 0; i < intArrBench.length; i++) {
+      realSum += intArrBench[i];
+    }
+
+    System.out.println("The real sum of the array is: " + realSum);
   }
 
   class Invoker implements Executor {
