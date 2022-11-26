@@ -12,8 +12,12 @@ procedure arrman is
   begin
     i := left;
     while i <= Right loop
+
       Put_Line( a(i)'Image );
-      sum := sum + a (i);
+
+      if a (i) rem 2 = 0 then
+        sum := sum + a (i);
+      end if;
       i := i + 1;
     end loop;
     return sum;
@@ -23,7 +27,9 @@ procedure arrman is
   begin
     for i in a'Range loop
       a (i) := i;
+      --Put (a (i)'img & " ");
     end loop;
+    --New_Line;
   end create_array;
 
   task type my_task is
@@ -51,19 +57,16 @@ procedure arrman is
   task1 : array (1 .. 3) of my_task;
 
   sum00 : Integer;
-  general_sum : Integer := 0;
 begin
   create_array;
+  --  task1 (1).start (1, 3);
+  Put_Line (part_sum (a'First, a'Last)'img);
+  --  task1 (3).start (10, 30);
 
-  task1 (1).start (1, 30);
-  task1 (2).start (30, 60);
-  task1 (3).start (60, a'Last);
+  --  task1 (1).start (a'First, a'Last);
+  --  for i in task1'Range loop
+  --    task1 (i).finish (sum00);
+  --    Put_Line (sum00'Img & " ");
+  --  end loop;
 
-  for i in task1'Range loop
-    task1 (i).finish (sum00);
-    general_sum := general_sum + (sum00);
-    Put_Line (sum00'Img & " ");
-  end loop;
-
-  Put_Line ("Array sum is: " & general_sum'Img & " ");
 end arrman;
