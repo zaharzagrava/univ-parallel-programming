@@ -1,0 +1,25 @@
+[GENERATED OBJECT FILE]
+b__lab1.o
+[PROJECT FILES]
+/home/zagrava/university/paralel-programming/Ada/hello.gpr
+20221126083545 d311d57813e7653e3880501123bf49d2
+[BOUND OBJECT FILES]
+/home/zagrava/university/paralel-programming/Ada/.objs/lab1.o
+[GENERATED SOURCE FILES]
+b__lab1.ads
+b__lab1.adb
+b__lab1.ali
+[RESULTING OPTIONS]
+-L/home/zagrava/university/paralel-programming/Ada/.objs/
+-L/home/zagrava/university/paralel-programming/Ada/.objs/
+-L/usr/lib/gcc/x86_64-linux-gnu/10/adalib/
+-shared
+-shared-libgcc
+-lgnarl-10
+-lgnat-10
+-lrt
+-lpthread
+-ldl
+[RUN PATH OPTION]
+/usr/lib/gcc/x86_64-linux-gnu/10/adalib/
+/usr/lib

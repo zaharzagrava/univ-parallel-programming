@@ -65,5 +65,5 @@ begin
     Put_Line (sum00'Img & " ");
   end loop;
 
-  Put_Line ("Array sum is: " & general_sum'Img & " ");
+  Put_Line ("Array sum is > " & general_sum'Img & " ");
 end arrman;

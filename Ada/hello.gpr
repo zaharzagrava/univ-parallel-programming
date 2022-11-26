@@ -1,5 +1,5 @@
 project Hello is
-  for Main use ("hello.adb");
+  for Main use ("lab1.adb");
   for Object_Dir use ".objs";
 
   package Compiler is
