@@ -15,11 +15,11 @@ public class Lab2 {
   }
 
   private static int[] createMyArr() {
-    return new int[]{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17};
+    return new int[]{1,2,3,4,5};
   }
 
   public static void main(final String[] arguments) throws InterruptedException {
-    int[] intArr = Lab2.createLongMyArr().clone();
+    int[] intArr = Lab2.createMyArr().clone();
 
     int size = intArr.length;
 
@@ -32,6 +32,8 @@ public class Lab2 {
         System.out.println("--- Thread run ---");
 
         int threadsIndex = 0;
+        System.out.println(size / 2);
+        System.out.println(summationIndex < size / 2);
         while(threadsIndex < threadsCount && summationIndex < size / 2) {
           int begElemIndex = summationIndex;
           int endElemIndex = size - summationIndex - 1;
@@ -54,6 +56,8 @@ public class Lab2 {
           sumThreads[i].join();
           intArr[summationIndex - threadsIndex + i] = sumTasks[i].getValue();
         }
+
+        System.out.println(Arrays.toString(intArr));
       }
   
       size = size / 2 + size % 2;
