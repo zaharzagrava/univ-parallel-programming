@@ -7,22 +7,10 @@ using namespace std;
 
 int Lab1(int *sumArray, int size)
 {
-  const int partSize = 3;
-
-  // cout << "Chunk size is: " << (int)ceil((double)size / (double)partSize) << endl;
-
-  int partsCount = (int)ceil((double)size / (double)partSize);
-  int chunkSums[partsCount] = {};
   int sum = 0;
-
-  for(int i = 0; i < partsCount; i++)
+  for(int i = 0; i < size; i++)
   {
-    int partFirstIndex = partSize * i;
-    int partLastIndex = min(partSize * (i + 1), size);
-    for (int j = partFirstIndex; j < partLastIndex; j++)
-    {
-      sum += sumArray[j];
-    }
+    sum += sumArray[i];
   }
 
   cout << "Lab1 | The sum of the array is: " << sum << endl;
@@ -35,12 +23,16 @@ int Lab2(int *sumArray, int size)
   int localSize = size;
   while(localSize > 1)
   {
-    int summationIndex = 0;
-    while(summationIndex < localSize / 2)
+    for (int summationIndex = 0; summationIndex < localSize / 2; summationIndex++)
     {
       sumArray[summationIndex] = sumArray[summationIndex] + sumArray[localSize - summationIndex - 1];
-      summationIndex++;
     }
+
+    // while(summationIndex < localSize / 2)
+    // {
+    //   sumArray[summationIndex] = sumArray[summationIndex] + sumArray[localSize - summationIndex - 1];
+    //   summationIndex++;
+    // }
 
     // for (int i = 0; i < size; i++) 
     //   cout << sumArray[i] << "|";

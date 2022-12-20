@@ -9,29 +9,11 @@ using namespace std;
 
 int Lab1(int *sumArray, int size)
 {
-  const int partSize = 3;
-
-  // cout << "Chunk size is: " << (int)ceil((double)size / (double)partSize) << endl;
-
-  int partsCount = (int)ceil((double)size / (double)partSize);
-  int chunkSums[partsCount] = {};
   int sum = 0;
-
   #pragma omp parallel for reduction (+:sum)
-  for(int i = 0; i < partsCount; i++)
+  for(int i = 0; i < size; i++)
   {
-    // usleep(5000 * omp_get_thread_num()); // do this to avoid race condition while printing
-    // std::cout << "Num of thrs: " << omp_get_num_threads() << " Curr: " << omp_get_thread_num() << std::endl;
-    int partFirstIndex = partSize * i;
-    int partLastIndex = min(partSize * (i + 1), size);
-
-    // cout << "I: [" << partFirstIndex << ", " << partLastIndex << "]" << endl;
-
-    for (int j = partFirstIndex; j < partLastIndex; j++)
-    {
-      sum += sumArray[j];
-      // cout << "Sum elem: " << sumArray[j] << " Sum: " << sum << endl;
-    }
+    sum += sumArray[i];
   }
 
   cout << "Lab1 | The sum of the array is: " << sum << endl;
@@ -39,48 +21,22 @@ int Lab1(int *sumArray, int size)
 
 int Lab2(int *sumArray, int argSize)
 {
-  int size = argSize;
+  int localSize = argSize;
 
   const int partSize = 3;
-  const int threadsCount = 50;
-
-  while(size > 1)
+  while(localSize > 1)
   {
-    int summationIndex = 0;
-    while(summationIndex < size / 2)
+    #pragma omp parallel for shared(sumArray)
+    for (int summationIndex = 0; summationIndex < localSize / 2; summationIndex++)
     {
-      // cout << summationIndex << " " << size << " " << endl;
-      int threadsIndex = 0;
-
-      int taskData[threadsCount][2] = {};
-      // cout << size << 2 << endl;
-      while(threadsIndex < threadsCount && summationIndex < size / 2)
-      {
-        int begElemIndex = summationIndex;
-        int endElemIndex = size - summationIndex - 1;
-
-        taskData[threadsIndex][0] = sumArray[begElemIndex];
-        taskData[threadsIndex][1] = sumArray[endElemIndex];
-
-        threadsIndex++; summationIndex++;
-      }
-
-      // for (int i = 0; i < size && i < threadsCount; i++) 
-      //   cout << taskData[i][0] << " " << taskData[i][1] << "|";
-      // cout << endl;
-
-      #pragma omp parallel for shared(sumArray)
-      for(int i = 0; i < threadsIndex; i++)
-      {
-        sumArray[summationIndex - threadsIndex + i] = taskData[i][0] + taskData[i][1];
-      }
-
-      // for (int i = 0; i < size; i++) 
-      //   cout << sumArray[i] << "|";
-      // cout << endl;
+      sumArray[summationIndex] = sumArray[summationIndex] + sumArray[localSize - summationIndex - 1];
     }
 
-    size = size / 2 + size % 2;
+    // for (int i = 0; i < localSize; i++) 
+    //   cout << sumArray[i] << "|";
+    // cout << endl;
+
+    localSize = localSize / 2 + localSize % 2;
   }
 
   cout << "Lab2 | The sum of the array is: " << sumArray[0] << endl;
